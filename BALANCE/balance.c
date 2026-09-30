@@ -91,9 +91,12 @@ void Balance_task(void *pvParameters)
 			{
 				case 1:    //USER¼üµ¥»÷
 					run = !run;
+				  Servo +=200;
 					break;
-				case 2:    //USER¼üË«»÷					
+				case 2:    //USER¼üË«»÷	
+					Servo -=200;
 					break;				 
+				  
 			} 
       			
 			//If there is no abnormity in the battery voltage, and the enable switch is in the ON position,

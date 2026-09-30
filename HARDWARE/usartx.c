@@ -185,8 +185,9 @@ int USART2_IRQHandler(void)
 			i=0;
 			memset(Receive, 0, sizeof(u8)*50); //Clear the array to zero//สýื้วๅมใ
 	 }
-  return 0;	
+		return 0;	
 	}
+	return 0;
 }
 
 /**************************************************************************

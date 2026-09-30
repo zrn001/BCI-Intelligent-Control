@@ -8,6 +8,6 @@
 
 void show_task(void *pvParameters);
 void oled_show(void);
-void APP_Show(void);
+void Host_Show(void);
 
 #endif

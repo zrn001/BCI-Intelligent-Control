@@ -67,9 +67,6 @@ float Axle_spacing;
 //Bluetooth remote control associated flag bits
 //蓝牙遥控相关的标志位
 u8 Flag_Left, Flag_Right, Flag_Direction=0, Turn_Flag; 
-//Sends the parameter's flag bit to the Bluetooth APP
-//向蓝牙APP发送参数的标志位
-u8 PID_Send; 
 
 void systemInit(void)
 {       	
@@ -99,8 +96,8 @@ void systemInit(void)
 	//串口1初始化，通信波特率115200
 	uart1_init(115200);	
 	//Serial port 2 initialization, communication baud rate 9600, 
-	//used to communicate with Bluetooth APP terminal
-	//串口2初始化，通信波特率9600，用于与蓝牙APP端通信
+	//used to communicate with Bluetooth Host terminal
+	//串口2初始化，通信波特率230400，用于与蓝牙上位机端通信
 	uart2_init(230400);  
 	//ADC pin initialization, used to read the battery voltage and potentiometer gear, 
 	//potentiometer gear determines the car after the boot of the car model

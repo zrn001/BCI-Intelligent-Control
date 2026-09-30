@@ -30,7 +30,9 @@ typedef struct
 #define MINI_AKM_MIN_TURN_RADIUS 0.350f 
 
 
-//请根据自己小车的实际情况测量并修改此处参数值
+/*****************************************
+请根据自己小车的实际情况测量并修改此处参数值
+******************************************/
 //Wheelspacing
 //轮距 
 #define Akm_wheelspacing         0.162f
@@ -50,7 +52,7 @@ typedef struct
 
 //Black tire, tank_car wheel diameter
 //黑色轮胎车轮直径
-#define	  Small_WheelDiameter   0.065
+#define	  Small_WheelDiameter   0.0667
 #define	  Great_WheelDiameter   0.085
 
 //The encoder octave depends on the encoder initialization Settings

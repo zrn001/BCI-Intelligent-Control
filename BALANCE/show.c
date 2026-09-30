@@ -1,13 +1,12 @@
 #include "show.h"
 int Voltage_Show;
-unsigned char i;          
-unsigned char Send_Count; 
+extern u8 Car_Mode;
 extern int Time_count;
 /**************************************************************************
-Function: Read the battery voltage, buzzer alarm, start the self-test, send data to APP, OLED display task
+Function: Read the battery voltage, buzzer alarm, start the self-test, send data to Host, OLED display task
 Input   : none
 Output  : none
-函数功能：读取电池电压、蜂鸣器报警、开启自检、向APP发送数据、OLED显示屏显示任务
+函数功能：读取电池电压、蜂鸣器报警、开启自检、向上位机发送数据、OLED显示屏显示任务
 入口参数：无
 返回  值：无
 **************************************************************************/
@@ -45,7 +44,7 @@ void show_task(void *pvParameters)
 		else if(10<=Voltage && Voltage<10.5f && LowVoltage_1<2)LowVoltage_1++; //10.5V, first buzzer when low battery //10.5V，低电量时蜂鸣器第一次报警
 		else if(Voltage<10 && LowVoltage_2<2)LowVoltage_2++; //10V, when the car is not allowed to control, the buzzer will alarm the second time //10V，小车禁止控制时蜂鸣器第二次报警
 					
-		APP_Show();	 //Send data to the APP //向APP发送数据
+		Host_Show();	 //Send data to the Host //向上位机发送数据
 		oled_show(); //Tasks are displayed on the screen //显示屏显示任务
    }
 }  
@@ -61,14 +60,14 @@ Output  : none
 void oled_show(void)
 {  
    static int count=0;	 
-	 int Car_Mode_Show;
+
 	
 	 //Collect the tap information of the potentiometer, 
 	 //and display the car model to be fitted when the car starts up in real time
 	 //采集电位器档位信息，实时显示小车开机时要适配的小车型号
 	 Divisor_Mode=2048/CAR_NUMBER+CAR_NUMBER;
-	 Car_Mode_Show=(int) ((Get_adc_Average(Potentiometer,10))/Divisor_Mode);	
-	 if(Car_Mode_Show>(CAR_NUMBER-1))Car_Mode_Show=CAR_NUMBER-1;
+	 Car_Mode=(int) ((Get_adc_Average(Potentiometer,10))/Divisor_Mode);	
+	 if(Car_Mode>(CAR_NUMBER-1))Car_Mode=CAR_NUMBER-1;
 	 Voltage_Show=Voltage*100; 
 	 count++;
 
@@ -76,7 +75,7 @@ void oled_show(void)
 			//OLED_Clear();
 			//The first line of the display shows the content // 
 		 //显示屏第1行显示内容//
-		 switch(Car_Mode_Show)
+		 switch(Car_Mode)
 		 {
 			case Akm_Car:       OLED_ShowString(0,0,"Akm             "); break; 
 			case Diff_Car:      OLED_ShowString(0,0,"Diff            "); break; 
@@ -114,9 +113,11 @@ void oled_show(void)
 		 
 		  //The fourth line of the display shows the content // 
 			//显示屏第4行显示内容//
+		 OLED_ShowString(00,30,"                ");
 		 if(Car_Mode==Akm_Car)
 		 {
 				//阿克曼小车显示舵机的PWM的数值//
+
 				OLED_ShowString(00,30,"SERVO:");
 				if( Servo<0)		      OLED_ShowString(60,30,"-"),
 															OLED_ShowNumber(80,30,-Servo,4,12);
@@ -135,7 +136,7 @@ void oled_show(void)
 		 
 		 //The 5th line of the display shows the content // 
 		 //显示屏第5行显示内容//
-		 else if(Car_Mode==Diff_Car)
+		 if(Car_Mode==Diff_Car)
 		 {
 			 //差速小车显示右电机的PWM的数值//
 															 OLED_ShowString(00,40,"MB");
@@ -163,28 +164,27 @@ void oled_show(void)
 		OLED_Refresh_Gram();
 }
 /**************************************************************************
-Function: Send data to the APP
+Function: Send data to the Host
 Input   : none
 Output  : none
-函数功能：向APP发送数据
+函数功能：向上位机发送数据
 入口参数：无
 返回  值：无
 **************************************************************************/
-void APP_Show(void)
+void Host_Show(void)
 {    
-	 int Left_Figure,Right_Figure,Voltage_Show;
+	 int Left_Figure,Right_Figure,Voltage_Percent;
 	
 	 //The battery voltage is processed as a percentage
 	 //对电池电压处理成百分比形式
-	 Voltage_Show=(Voltage*1000-10000)/27;
-	 if(Voltage_Show>100)Voltage_Show=100; 
+	 Voltage_Percent=(Voltage*1000-10000)/26;
+	 if(Voltage_Percent>100)Voltage_Percent=100; 
 	
-	 //Wheel speed unit is converted to 0.01m/s for easy display in APP
-	 //车轮速度单位转换为0.01m/s，方便在APP显示
+	 //Wheel speed unit is converted to 0.01m/s for easy display in Host
+	 //车轮速度单位转换为0.01m/s，方便在上位机显示
 	 Left_Figure=MOTOR_A.Encoder*100;  if(Left_Figure<0)Left_Figure=-Left_Figure;	
 	 Right_Figure=MOTOR_B.Encoder*100; if(Right_Figure<0)Right_Figure=-Right_Figure; 		 
 	 
-	 printf("{C%d:%d:%d}$",(int)Left_Figure,(int)Right_Figure,(int)Voltage_Show);
+	 printf("{C%d:%d:%d}$",(int)Left_Figure,(int)Right_Figure,(int)Voltage_Percent);
 }
-
 

@@ -28,7 +28,6 @@
 #include "show.h"								   
 #include "key.h"
 #include "lidar.h"
-#include "pstwo.h"
 #include "robot_select_init.h"
 
 // Enumeration of car types
@@ -64,14 +63,13 @@ extern float Wheel_perimeter;
 extern float Wheel_spacing; 
 extern float Axle_spacing; 
 
-extern uint8_t Flag_Left, Flag_Right, Flag_Direction, Turn_Flag; 
-extern uint8_t PID_Send;  
+extern uint8_t Flag_Left, Flag_Right, Flag_Direction, Turn_Flag;  
 
 void systemInit(void);
 
 /***Macros define***/ /***宏定义***/
 //The number of robot types to determine the value of Divisor_Mode. There are currently 6 car types
-//机器人型号数量，决定Divisor_Mode的值，目前有6种小车类型
+//机器人型号数量，决定Divisor_Mode的值，目前有2种小车类型
 #define CAR_NUMBER    2      
 #define RATE_1_HZ		  1
 #define RATE_5_HZ		  5
